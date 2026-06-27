@@ -8,6 +8,7 @@ jobs:
   terraform:
     name: "Infrastructure Provisioning"
     runs-on: ubuntu-latest
+    environment: dev
     defaults:
       run:
         working-directory: ./terraform # Path to your Terraform files
