@@ -26,13 +26,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
+    # The CA bundle is already present on the runner image in this example.
+    # Alternatively, write it from a secret in a previous step.
+    - name: Trust the internal CA
+      run: echo "NODE_EXTRA_CA_CERTS=/etc/ssl/certs/internal-ca.pem" >> "$GITHUB_ENV"
+  
+    - uses: actions/setup-java@v5
       with:
+        distribution: 'temurin'
         java-version: '21'
-        distribution: 'corretto'
-        cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
