@@ -8,6 +8,6 @@ public class Controller {
 
     @GetMapping("/")
     public String apiRoot() {
-        return "Hello, GHA!";
+        return "(\\(\\ <br>(-.-) <br>o_(\")(\")";
     }
 }
