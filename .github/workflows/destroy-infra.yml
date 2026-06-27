@@ -17,7 +17,7 @@ jobs:
   terraform:
     name: "Infrastructure Destroy"
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
+    environment: dev
     defaults:
       run:
         working-directory: ./terraform # Path to your Terraform files
