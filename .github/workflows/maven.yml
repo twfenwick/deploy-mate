@@ -31,7 +31,7 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: '21'
-      - run: java --version
+      - run: mvn clean package dependency:go-offline -B  
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     #- name: Update dependency graph
