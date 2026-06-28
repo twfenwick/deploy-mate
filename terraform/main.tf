@@ -55,3 +55,9 @@ resource "aws_ecr_repository" "services" {
   name         = "deploy-mate-dev"
   force_delete = true
 }
+
+module "deploy_mate_alb" {
+  source = "./modules/alb"
+  vpc_id = module.vpc.vpc_id
+  public_subnets = module.vpc.public_subnets
+}
