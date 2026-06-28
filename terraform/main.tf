@@ -20,3 +20,8 @@ module "vpc" {
     Environment = "dev"
   }
 }
+
+resource "aws_ecr_repository" "services" {
+  name = "deploy-mate"
+  force_delete = true
+}
