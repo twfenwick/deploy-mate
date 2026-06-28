@@ -22,44 +22,7 @@ module "vpc" {
 }
 
 resource "aws_ecr_repository" "services" {
-  name = "deploy-mate"
+  name = "deploy-mate-dev"
   force_delete = true
-}
 
-resource "aws_iam_policy" "policy" {
-  name        = "ecr-policy"
-  path        = "/"
-  description = "deploy-mate-ecr"
-
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression result to valid JSON syntax.
-  policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Action": [
-          "ecr:CreateRepository",
-          "ecr:DeleteRepository",
-          "ecr:DescribeRepositories",
-          "ecr:GetRepositoryPolicy",
-          "ecr:SetRepositoryPolicy",
-          "ecr:DeleteRepositoryPolicy",
-          "ecr:ListTagsForResource",
-          "ecr:TagResource",
-          "ecr:UntagResource",
-          "ecr:PutImageTagMutability",
-          "ecr:PutLifecyclePolicy",
-          "ecr:GetLifecyclePolicy",
-          "ecr:DeleteLifecyclePolicy"
-        ],
-        "Resource": "arn:aws:ecr:us-east-1:YOUR_ACCOUNT_ID:repository/*"
-      },
-      {
-        "Effect": "Allow",
-        "Action": "ecr:GetAuthorizationToken",
-        "Resource": "*"
-      }
-    ]
-  })
 }
