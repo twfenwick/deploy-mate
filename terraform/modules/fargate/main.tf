@@ -5,6 +5,12 @@ resource "aws_security_group" "service" {
   vpc_id = var.vpc_id
 }
 
+resource "aws_vpc_security_group_egress_rule" "service" {
+  security_group_id = aws_security_group.service.id
+  ip_protocol       = "-1"
+  cidr_ipv4         = "0.0.0.0/0"
+}
+
 resource "aws_ecs_task_definition" "this" {
   family                   = var.service_name
   requires_compatibilities = ["FARGATE"]
@@ -17,7 +23,6 @@ resource "aws_ecs_task_definition" "this" {
     name = var.service_name
     # 3. Update image references in modules/fargate/main.tf
     image = "${data.aws_caller_identity.current.account_id}.dkr.ecr.us-east-1.amazonaws.com/deploy-mate:latest"
-    # image = var.image_name
     portMappings = [{
         containerPort = 8087
         hostPort      = 8087
