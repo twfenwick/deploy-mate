@@ -5,6 +5,14 @@ resource "aws_security_group" "service" {
   vpc_id = var.vpc_id
 }
 
+resource "aws_vpc_security_group_ingress_rule" "service" {
+  security_group_id            = aws_security_group.service.id
+  from_port                    = 8087
+  to_port                      = 8087
+  ip_protocol                  = "tcp"
+  referenced_security_group_id = var.alb_security_group_id
+}
+
 resource "aws_vpc_security_group_egress_rule" "service" {
   security_group_id = aws_security_group.service.id
   ip_protocol       = "-1"
@@ -24,10 +32,10 @@ resource "aws_ecs_task_definition" "this" {
     # 3. Update image references in modules/fargate/main.tf
     image = "${data.aws_caller_identity.current.account_id}.dkr.ecr.us-east-1.amazonaws.com/deploy-mate:latest"
     portMappings = [{
-        containerPort = 8087
-        hostPort      = 8087
-        protocol      = "tcp"
-      }]
+      containerPort = 8087
+      hostPort      = 8087
+      protocol      = "tcp"
+    }]
   }])
 }
 
@@ -42,6 +50,11 @@ resource "aws_ecs_service" "this" {
     subnets          = var.private_subnets
     security_groups  = [aws_security_group.service.id]
     assign_public_ip = false
+  }
+  load_balancer {
+    target_group_arn = var.target_group_arn
+    container_name   = var.service_name
+    container_port   = 8087
   }
   # service_registries {
   #   registry_arn = aws_service_discovery_service.this.arn

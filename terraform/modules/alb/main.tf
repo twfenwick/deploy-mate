@@ -32,7 +32,7 @@ resource "aws_lb_target_group" "deploy_mate" {
   port        = 8087
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
-  target_type = "ip"  # required for Fargate
+  target_type = "ip" # required for Fargate
 
   health_check {
     path = "/"
@@ -53,12 +53,12 @@ resource "aws_lb_listener" "deploy_mate" {
 
 # Route 53
 data "aws_route53_zone" "this" {
-  name = "timfenwick.com"  # replace with your domain
+  name = "timfenwick.com" # replace with your domain
 }
 
 resource "aws_route53_record" "deploy_mate" {
   zone_id = data.aws_route53_zone.this.zone_id
-  name    = "deploy-mate.timfenwick.com"  # or just "yourdomain.com" for apex
+  name    = "deploy-mate.timfenwick.com" # or just "yourdomain.com" for apex
   type    = "A"
 
   alias {

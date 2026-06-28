@@ -42,22 +42,24 @@ resource "aws_iam_role_policy_attachment" "ecs_execution" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+module "deploy_mate_alb" {
+  source         = "./modules/alb"
+  vpc_id         = module.vpc.vpc_id
+  public_subnets = module.vpc.public_subnets
+}
+
 module "deploy_mate" {
-  source             = "./modules/fargate"
-  cluster_id         = aws_ecs_cluster.deploy_mate.id
-  service_name       = "deploy-mate"
-  execution_role_arn = aws_iam_role.ecs_execution.arn
-  vpc_id             = module.vpc.vpc_id
-  private_subnets    = module.vpc.private_subnets
+  source                = "./modules/fargate"
+  cluster_id            = aws_ecs_cluster.deploy_mate.id
+  service_name          = "deploy-mate"
+  execution_role_arn    = aws_iam_role.ecs_execution.arn
+  vpc_id                = module.vpc.vpc_id
+  private_subnets       = module.vpc.private_subnets
+  target_group_arn      = module.deploy_mate_alb.target_group_arn
+  alb_security_group_id = module.deploy_mate_alb.alb_security_group_id
 }
 
 resource "aws_ecr_repository" "services" {
   name         = "deploy-mate-dev"
   force_delete = true
-}
-
-module "deploy_mate_alb" {
-  source = "./modules/alb"
-  vpc_id = module.vpc.vpc_id
-  public_subnets = module.vpc.public_subnets
 }
