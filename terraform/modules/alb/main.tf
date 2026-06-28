@@ -58,7 +58,7 @@ data "aws_route53_zone" "this" {
 
 resource "aws_route53_record" "deploy_mate" {
   zone_id = data.aws_route53_zone.this.zone_id
-  name    = "deploy-mate.timfenwick.com" # or just "yourdomain.com" for apex
+  name    = "bunny.timfenwick.com" # or just "yourdomain.com" for apex
   type    = "A"
 
   alias {
